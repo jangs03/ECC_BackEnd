@@ -1,0 +1,194 @@
+## 1장 깃 시작하기
+# 깃에서 사용가능한 명령어 출력
+git 
+
+# 사용자의 이름과 이메일 주소 저장
+git config --global user.name "이름"
+git config --global user.email "메일 주소"
+
+# 현재 위치의 경로
+pwd
+
+# 현재 디렉터리의 파일 & 디렉터리 확인
+ls 
+ls -l # 상세정보
+ls -a # 숨긴 파일 다 표시
+ls -r # 파일 정렬 순서 거꾸로 표시
+ls -t # 파일 작성 시간순(내림차순) 표시
+ls -la # 둘다 사용가능
+
+# 터미널 창 지우기
+clear
+
+# 터미널 창에서 디렉터리 이동
+# 상위 디렉터리로 이동
+cd ..
+# 특정 디렉터리로 이동 - cd 디렉터리명
+cd Users
+cd c:
+# 홈 디렉터리로 이동
+cd ~
+
+# 하위 디렉터리 생성 - mkdir 디렉터리명
+mkdir test
+
+# 하위 디렉터리, 파일 삭제
+rm -r test
+
+# 터미널 종료
+exit
+
+## 2장 깃으로 버전 관리하기
+### 2-1.
+cd c:
+mkdir hello-git
+cd hello-git
+ls -la
+git init
+git status
+
+### 2-2.
+git add hello.txt
+git commit -m "message1"
+git status
+git log
+git commit -am "message2"
+git status
+git log
+
+### 2-3.
+git diff
+
+### 2-4.
+git status
+git add .
+git commit -m "message3"
+git log
+git log --stat
+git add hello2.txt
+git status
+git commit -m "delete b,c,d"
+git status
+git commit --amend
+
+### 2-5.
+git restore hello.txt
+git add hello2.txt
+git status
+git restore --staged hello2.txt
+git commit -am "message4"
+git reset HEAD^
+git restore hello2.txt
+git add rev.txt
+git commit -m "R1"
+git commit -am "R2"
+git commit -am "R3"
+git commit -am "R4"
+git reset --hard 복사한 커밋 해시
+git revert 복사한 커밋해시
+git log
+
+## 3장 깃과 브랜치
+### 3-2.
+git init
+git add work.txt
+git commit -m "work1"
+git commit -am "work2"
+git commit -am "work3"
+git branch
+git branch apple
+git branch
+git branch google
+git branch ms
+git branch
+git commit -am "main work 4"
+git log --oneline
+git switch apple
+git log --oneline
+
+### 3-3.
+git add .
+git commit -m "apple work 4"
+git log --oneline
+git log --oneline --branches
+git log --oneline --branches --graph
+git log main..apple
+git log apple..main
+
+### 3-4.
+git init
+git branch o2
+git add main.txt
+git commit -m "main work 2"
+git switch 02
+git add o2.txt
+git commit -m "o2 work 2"
+git log --oneline --branches --graph
+git switch main
+git merge o2
+git log --oneline --branches --graph
+git init 
+git add work.txt
+git commit -m "work1"
+git branch o2
+git commit -am "main work 2"
+git switch o2
+git commit -am "o2 work 2"
+git switch main
+git merge o2
+git add work.txt
+git commit -m "work 1"
+git branch o2
+git commit -am "main work2"
+git switch o2
+git commit -am "o2 work 2"
+git switch main
+git merge o2
+git commit -am "merge o2 branch"
+git log --oneline --branches --graph
+git branch
+bit branch -d o2
+git add init.txt; git commit -m "init"
+git brach topic
+git log --oneline --all --graph
+touch m1; git add m1; git commit -m "m1"
+touch m2; git add m2; git commit -m "m2"
+git log --oneline --all --graph
+git switch topic
+touch m1; git add m1; git commit -m "m1"
+touch m2; git add m2; git commit -m "m2"
+touch m3; git add m3; git commit -m "m3"
+git log --oneline --all --graph
+git switch main
+git cherry-pick 복사한 커밋해시
+ls
+
+### 4장 깃허브 시작하기
+## 4-2.
+# 저장소 주소 https://github.com/jangs03/test2.git
+
+## 4-3.
+git init
+git add f1.txt; git commit -m "add a"; git log;
+git remote add origin 복사한 주소
+git remote -v
+
+## 4-4.
+git push -u origin main
+git commit -am "add b"
+git push
+git pull origin main
+
+## 4-5.
+cd ~
+ssh-keygen -t ed25519 -C "seoyeonj37@gmail.com"
+cd .ssh
+ls -la
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+clip < ~/.ssh/id_ed25519.pub
+git init
+git remote add origin https주소 붙여넣기
+git remote -v
+git add f.txt; git commit -m "test ssh"
+git push -u origin main
