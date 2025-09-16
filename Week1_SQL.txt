@@ -1,0 +1,32 @@
+--2장
+--select * from 테이블명
+select * from sample21;
+--desc 테이블명
+desc sample21;
+--select 열1,열2 from 테이블명 where 조건식
+select no,name from sample21;
+--select 열 from 테이블명 where 조건식
+select * from sample21 where no=2;
+select * from sample21 where no<>2;
+select * from sample21 where name = "박준용";
+select * from sample21 where birthday = NULL; --오류
+select * from sample21 where birthday IS NULL;
+--AND, OR
+select * from sample24;
+--where a<>0 AND b <> 0
+select * from sample24 where a<>0 and b<>0;
+select * from sample24 where a<>0 OR b<>0;
+select * from sample24 where no=1 OR 2; --오류
+select * from sample24 where no = 1 OR no = 2;
+select * from sample24 where a = 1 or a=2 and b=1 or b=2; -- and가 or보다 우선순위 높음
+select * from sample24 where (a=1 or a=2) and (b=1 or b=2); -- 괄호로 우선순위 변경 가능
+--not
+select * from sample24 where not(a<>0 OR b<>0);
+-- Like 패턴 매칭
+-- 열명 LIKE '패턴'
+select * from sample25;
+-- where text like 'SQL%' %는 임의의 문자열을 나타내는 메타문자
+select * from sample25 where text like 'SQL%';
+select * from sample25 where text like '%SQL%';
+select * from sample25 where text like '%/%%'; -- % escape
+-- It's -> 'It''s' ~ ' -- ' escape
