@@ -1,0 +1,47 @@
+# 5장 깃허브로 협업하기
+## 5-1. 서로 다른 컴퓨터에서 원격 저장소 함께 사용하기
+
+### 원격 저장소 복제하기 - git clone
+++ git_office, git_home 생성 / test1에는 f1.txt,f2.txt 저장돼있음
+git clone 원격저장소 주소(test1) # git_office에서
+git clone 원격저장소 주소(test1) # git_home에서
+git log # 양쪽에서
+
+### 집에 있는 컴퓨터에서 작업하고 올리기
+git commit -am "add c"
+git push
+
+### 회사에 있는 컴퓨터에서 내려받아 작업하기
+git pull # git_office는 이미 origin에 연결되어있음
+git commit -am "Add a"
+git push # git_office -> test1
+git pull # test1 -> git_home
+git log
+
+## 5-2. 원격 브랜치 정보 가져오기
+### 커밋과 브랜치 이해하기
+cd ~/git_home
+git log
+git add f3.txt
+git commit -m "create f3.txt"
+git log --oneline
+git status
+git push
+git log --oneline
+
+### 원격 브랜치 정보 가져오기 - git fetch
+git fetch
+ls -al
+git log --oneline
+git status
+git diff HEAD origin/main
+git merge origin/main
+git log --oneline
+
+## 5-3. 협업의 기본 알아보기
+### 지역 저장소에서 작업하고 푸시하기
+git clone 원격저장소 주소
+git switch plan
+git add plan-1.txt
+git commit -am "plan-1"
+git push
