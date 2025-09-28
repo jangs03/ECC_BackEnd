@@ -1,0 +1,187 @@
+## 5장 - 집계와 서브쿼리
+# 예제 5-1. sample51의 행 개수 구하기
+SELECT * FROM sample51;
+SELECT COUNT(*) FROM sample51;
+# 예제 5-2. sample51의 행 개수를 WHERE구를 지정해 구하기
+SELECT * FROM sample51 WHERE name = 'A';
+SELECT * COUNT(*) FROM sample51 WHERE name = 'A';
+# 예제 5-3. 행개수를 구할 때 NULL값 다루기
+SELECT * FROM sample51;
+SELECT COUNT(no),COUNT(name) FROM sample51;
+# 예제 5-4. sample51 테이블
+SELECT * FROM sample51;
+# 예제 5-5. DISTINCT로 중복 제거하기
+SELECT ALL name FROM sample51;
+SELECT DISTINCT name FROM sample51;
+# 예제 5-6. 중복을 제거한 뒤 개수 구하기
+SELECT COUNT(ALL name), COUNT(DISTINCT name) FROM sample51;
+# 예제 5-7. SUM으로 합계 구하기
+SELECT * FROM sample51;
+SELECT SUM(quantity) FROM sample51;
+# 예제 5-8. AVG로 평균값 구하기
+SELECT AVG(quantity),SUM(quantity)/COUNT(quantity) FROM sample51;
+# 예제 5-9. AVG로 평균값 계산(NULL을 0으로 변환)
+SELECT AVG(CASE WHEN quantity IS NULL THEN 0 ELSE quantity END)
+   -> AS avgnull0 FROM sample51;
+# 예제 5-10. MIN,MAX로 최소값,최대값 구하기
+SELECT MIN(quantity), MAX(quantity), MIN(name), MAX(name)
+   -> FROM sample51;
+# 예제 5-11. sample51 테이블
+SELECT * FROM sample51;
+# 예제 5-12. name열로 그룹화하기
+SELECT name FROM sample511 GROUP BY name;
+# 예제 5-13. name열을 그룹화해 계산하기
+SELECT name, COUNT(name), SUM(quantity)
+   -> FROM sample51 GROUP BY name;
+# 예제 5-14. HAVING을 사용해 검색
+SELECT name,COUNT(name) FROM sample51 GROUP BY name;
+SELECT name,COUNT(name) FROM sample51
+   -> GROUP BY name HVING COUNT(name)=1;
+# 예제 5-15. 집계한 결과 정렬하기
+SELECT name, COUNT(name), SUM(quantity)
+   -> FROM sample51 GROUP BY name ORDER BY SUM(quantity) DESC;
+# 예제 5-16. sample54 테이블
+SELECT * FROM sample54;
+# 예제 5-17. sample54에서의 a의 최솟값 검색하기
+SELECT MIN(a) FROM sample54;
+# 예제 5-18. 최솟값을 가지는 행 삭제하기
+DELETE FROM sample54 WHERE a = (SELECT MIN(a) FROM sample54);
+// MySQL
+DELETE FROM sample54 WHERE 
+   -> a = (SELECT a FROM (SELECT MIN(a) AS a FROM sample54)AS x);
+SELECT * FROM sample54;
+# 예제 5-19. 서브쿼리의 패턴
+SELECT MIN(a) FROM sample54;
+SELECT no FROM sample54;
+SELECT MIN(a),MAX(no) FROM sample54;
+SELECT no,a FROM sample54;
+# 예제 5-20. SELECT 구에서 서브쿼리 사용하기
+SELECT
+   ->(SELECT COUNT(*) FROM sample51) AS sq1,
+   ->(SELECT COUNT(*) FROM sample54) AS sq2;
+# 예제 5-21. SELECT 구에서 서브쿼리 사용하기(Oracle)
+SELECT
+   ->(SELECT COUNT(*) FROM sample51) AS sq1,
+   ->(SELECT COUNT(*) FROM sample54) AS sq2 FROM DUAL;
+# 예제 5-22. SET 구에서 서브쿼리 사용하기
+UPDATE sample54 SET a = (SELECT MAX(a) FROM sample54);
+# 예제 5-23. FROM 구에서 서브쿼리 사용하기
+SELECT * FROM (SELECT * FROM sample54) sq;
+# 예제 5-24. FROM 구에서 서브쿼리 사용하기(AS로 지정)
+SELECT * FROM (SELECT * FROM sample54) AS sq;
+# 예제 5-25. FROM 구에서 서브쿼리 사용하기
+SELECT * FROM (SELECT * FROM (SELECT * FROM sample54) sq1) sq2;
+# 예제 5-26. ORACLE에서 LIMIT구의 대체 명령
+SELECT * FROM(
+   -> SELECT * FROM sample54 ORDER BY a DESC
+   -> )sq
+   -> WHERE ROWNUM <= 2;
+# 예제 5-27. VALUES 구에서 서브쿼리 사용하기
+INSERT INTO sample541 VALUES(
+   -> (SELECT COUNT(*) FROM sample51),
+   -> (SELECT COUNT(*) FROM sample54)):
+SELECT * FROM sample54;
+# 예제 5-28. SELECT 결과를 INSERT하기
+INSERT INTO sample541 SELECT 1,2;
+SELECT * FROM sample541;
+# 예제 5-29. 테이블의 행 복사하기
+INSERT INTO sample542 SELECT * FROM sample543;
+# 예제 5-30. sample551테이블과 sample552 테이블
+SELECT * FROM sample551;
+SELECT * FROM sample552;
+# 예제 5-31. EXISTS로 '있음'으로 갱신하기
+UPDATE sample551 SET a = '있음' WHERE
+   -> EXISTS (SELECT * FROM sample552 WHERE no2 = no);
+SELECT * FROM sample551;
+# 예제 5-32. NOT EXISTS로 '없음'으로 갱신하기
+UPDATE sample551 SET a = '없음' WHERE
+   -> NOT EXISTS (SELECT * FROM sample552 WHERE no2 = no);
+SELECT * FROM sample551;
+# 예제 5-33. 열에 테이블명 붙이기
+UPDATE sample551 SET a = '있음' WHERE
+   -> EXISTS (SELECT * FROM sample552 WHERE sample552.no2 = sample551.no);
+# 예제 5-34. IN을 사용해 조건식 기술
+SELECT * FROM sample551 WHERE no in (3,5);
+# 예제 5-35. IN의 오른쪽을 서브쿼리로 지정하기
+SELECT * FROM sample551 WHERE no IN
+   -> (SELECT no2 FROM sample552);
+
+## 6장 - 데이터베이스 객체 작성과 삭제
+# 예제 6-1. CREATE TABLE로 테이블 작성하기
+CREATE TABLE sample62)
+   -> no INTEGER NOT NULL,
+   -> a VARCHAR(30),
+   -> b DATE);
+DESC sample62;
+# 예제 6-2. ALTER TABLE로 테이블에 열 추가하기
+ALTER TABLE sample62 ADD newcol INTEGER;
+DESC sample62;
+# 예제 6-3. ALTER TABLE로 열 속성 변경하기
+ALTER TABLE sample62 MODIFY newcol VARCHAR(20);
+DESC sample62;
+# 예제 6-4. ALTER TABLE로 열 이름 변경하기
+ALTER TABLE sample62 CHANGE newcol c VARCHAR(20);
+DESC sample62;
+# 예제 6-5. ALTER TABLE로 열 삭제하기
+ALTER TABLE sample62 DROP c:
+DESC sample62;
+# 예제 6-6. 테이블 열에 제약 정의하기
+CREATE TABLE sample631(
+   -> a INTEGER NOT NULL,
+   -> b INTEGER NOT NULL UNIQUE
+   -> c VARCHAR(30));
+# 예제 6-7. 테이블에 '테이블제약'정의하기
+CREATE TABLE sample632(
+   -> no INTEGER NOT NULL,
+   -> sub_no INTEGER NOT NULL,
+   -> name VARCHAR(30),
+   -> PRIMARY KEY (no,sub_no));
+# 예제 6-8. 테이블 제약에 이름붙이기
+CREATE TABLE sample632(
+   -> no INTEGER NOT NULL,
+   -> sub_no INTEGER NOT NULL,
+   -> name VARCHAR(30),
+   -> CONSTRAINT pkey_sample PRIMARY KEY (no,sub_no));
+# 예제 6-9. 열 제약 추가하기 
+ALTER TABLE sample631 MODIFY c VARCHAR(30) NOT NULL;
+# 예제 6-10. 테이블 제약 추가하기
+ALTER TABLE sample631 ADD CONSTRAINT pkey_sample631 PRIMARY KEY(a);
+# 예제 6-11. 열 제약 삭제하기
+ALTER TABLE sample631 MODIFY c VARCHAR(30);
+# 예제 6-12. 테이블 제약 삭제하기
+ALTER TABLE sample631 DROP CONSTRAINT pkey_sample631;
+# 예제 6-13. 테이블 제약 삭제하기
+ALTER TABLE sample631 DROP PRIMARY KEY;
+# 예제 6-14. sample634 테이블 작성하기
+CREATE TABLE sample634(
+   -> p INTEGER NOT NULL,
+   -> a VARCHAR(30).
+   -> CONSTRAINT pkey_sample634 PRIMARY KEY(p));
+# 예제 6-15. sample634에 행 추가하기
+INSERT INTO sample634 VALUES (1,'첫째줄');
+INSERT INTO sample634 VALUES (2,'둘째줄');
+INSERT INTO sample634 VALUES (3,'셋째줄');
+# 예제 6-16. sample634에 중복되는 행 추가하기
+INSERT INTO sample634 VALUES (2,'넷째줄');
+# 예제 6-17. sample634를 중복되는 값으로 갱신하기
+UPDATE sample634 SET p=2 WHERE p=3;
+# 예제 6-18.a열과 b열로 이루어진 기본키
+SELECT a,b FROM sample635;
+# 예제 6-19. 인덱스 작성하기
+CREATE INDEX isample65 ON sample62(no);
+# 예제 6-20. 인덱스 삭제하기
+DROP INDEX isample65 ON sample62;
+# 예제 6-21. EXPLAIN으로 인덱스 사용 확인하기 1(MySQL)
+EXPLAIN SELECT * FROM sample62 WHERE a = 'a';
+# 예제 6-22. EXPLAIN으로 인덱스 사용 확인하기 2(MySQL)
+EXPLAIN SELECT * FROM sample62 WHERE no>10;
+# 예제 6-23. 뷰 작성하기
+CREATE VIEW sample_view_67 AS SELECT * FROM sample54;
+SELECT * FROM sample_view_67;
+# 예제 6-24. 열을 지정해 뷰 작성하기
+CREATE VIEW sample_view_672(n, v, v2) AS
+   -> SELECT no, a, a*2 FROM sample54;
+SELECT * FROM sample_view_672 WHERE n = 1;
+# 예제 6-25. 뷰 삭제하기
+DROP VIEW sample_view_672;
+
