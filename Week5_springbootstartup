@@ -1,0 +1,157 @@
+# 2강
+
+# build.gradle
+
+plugins{
+   id 'org.springframework.boot' version '2.3.1.RELEASE'
+   id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+   id 'java'
+   }
+group = 'hello' 
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11' # java 11 버전
+repositories {
+	mavenCentral() # 기본적으로 들어가는 라이브러리 로드
+ }
+# 
+dependencies{
+  # 템플릿 엔진
+	implementation'org.springframework.boot::spring-boot-starter-thymeleaf',
+	# 웹 프로젝트
+	implementation'org.springframework.boot::spring-boot-starter-web',
+	# 기본적으로 들어가는 라이브러리
+	testimplementation('org.springframework.boot::spring-boot-starter-test'){
+		exclude group:'org.junit.vintage',module:'junit-vintage-engine'}
+	}
+test{
+	useJUnitPlatform()
+	}
+
+# index.html
+
+	<!DOCTYPE HTML>
+ <html>
+ <head>
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ </head>
+ <body>
+ Hello
+<a href="/hello">hello</a> # 헬로라는 경로로 이동
+ </body>
+ </html>
+
+
+# Controller 
+// annotation 해줘야 함.
+@Controller
+public class HelloController {
+
+          @GetMapping("hello")
+
+           public String hello(Model model) {
+					           // data에 hello!! 넘김
+                     model.addAttribute("data", "hello!!"); 
+                     return "hello";  // hello.html을 찾아 렌더링 시킴   }
+}
+
+# viewResolver
+<!DOCTYPE HTML>
+ <html xmlns:th="http://www.thymeleaf.org">
+ <head>
+    <title>Hello</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ </head>
+ <body>
+ // data가 hello!!로 치환됨
+ <p th:text="'안녕하세요. ' + ${data}" >안녕하세요. 손님</p>
+ </body>
+ </html>
+
+# 3강 
+
+# hello-static.html
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>static content</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+정적 컨텐츠입니다.
+</body>
+</html>
+
+# Controller - MVC
+
+@Controller
+public class HelloController {
+
+		@GetMapping("hello-mvc")
+		// 외부에서 parameter 받기 : @RequestParam
+		// required = True면 기본으로 값을 넘겨야 함. 브라우저에 ?name=spring 추가 
+				public String helloMvc(@RequestParam("name") String name, Model model){
+				model.addAttribute("name", name);
+				return "hello-template";
+				}
+}
+
+# View - mvc, hello-template.html
+
+<html xmlns:th = "http://www.thymeleaf.org">
+<body>
+<p th:text = "'hello' + ${name}">hello! empty</p>
+</body>
+</html>
+
+# API _ Response body, Controller 문자 반환
+
+@Controller
+public class HelloController {
+		
+		@GetMapping("hello")
+		public Sring hello(Model model){
+					model.addAttribute("data", "hello!");
+					return "hello"!;}
+		
+		
+		@GetMapping("hello-mvc")
+		public String helloMvc(@RequestParam("name") String name, Model model){
+				model.addAttribute("name", name);
+				return "hello-template";
+				
+		@GetMapping("hello-string")
+		@ResponseBody // http의 body에 데이터를 직접 넣어주겠다
+		public String helloMvc(@RequestParam("name") String name){
+				return "hello" + name; //hello spring 
+				}
+}
+
+
+# API _ Response body, Controller 객체 반환
+
+ @Controller
+ public class HelloController {
+	    @GetMapping("hello-api")
+	    @ResponseBody
+			public Hello helloApi(@RequestParam("name") String name) {
+						 // 객체 생성 
+						 Hello hello = new Hello(); 
+						 // 파라미터로 name 넣음 
+			       hello.setName(name);
+				 	   return hello;
+    }
+    
+			static class Hello { // static class 선언 
+				private String name;
+			
+				public String getName() { //getter
+						return name;
+        }
+        
+				public void setName(String name) { //setter 
+						this.name = name;
+        }
+    }
+ }
